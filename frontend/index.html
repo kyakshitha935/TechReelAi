@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechScroll AI — Turn Scrolling into Learning</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="glow-container">
+        <div class="glow-sphere glow-blue"></div>
+        <div class="glow-sphere glow-purple"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <i class="fa-solid fa-wand-magic-sparkles logo-icon"></i>
+                <h1>TechScroll AI</h1>
+            </div>
+            <p class="tagline">"Turn your scrolling into something useful."</p>
+            <p class="description">An AI recommendation agent that understands what you're interested in — not just what you watched.</p>
+            
+            <!-- Demo mode indicator (hidden by default) -->
+            <div id="demo-mode-badge" class="demo-badge hidden">
+                <i class="fa-solid fa-bolt"></i> Demo Mode — Using local recommendation engine
+            </div>
+        </header>
+
+        <main class="app-content">
+            <!-- Grid Layout: Left Input, Right Results -->
+            <div class="grid-layout">
+                
+                <!-- Input Panel -->
+                <section class="card input-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-magnifying-glass-chart"></i> Analyze a Reel</h2>
+                    </div>
+                    
+                    <form id="recommend-form" class="recommend-form">
+                        <div class="input-group">
+                            <label for="description">Reel Description</label>
+                            <textarea id="description" placeholder="Describe what happens in the Reel... (e.g. A developer debugging a Java application late at night)" required></textarea>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="caption">Reel Caption</label>
+                            <textarea id="caption" placeholder="Paste the Reel caption here... (e.g. When your Java code finally works after 3 hours 😂)" required></textarea>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button type="submit" id="submit-btn" class="btn btn-primary">
+                                <i class="fa-solid fa-circle-play"></i> Analyze & Recommend
+                            </button>
+                            <button type="button" id="example-btn" class="btn btn-secondary">
+                                <i class="fa-solid fa-lightbulb"></i> Try Example
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Status & Results Area -->
+                <section class="results-area">
+                    
+                    <!-- Empty / Instruction State -->
+                    <div id="empty-state" class="state-card empty-state">
+                        <i class="fa-solid fa-compass-drafting state-icon"></i>
+                        <h3>Ready for Analysis</h3>
+                        <p>Enter a Reel description and caption on the left, then click <strong>Analyze & Recommend</strong> to run the semantic recommendation engine.</p>
+                    </div>
+
+                    <!-- Error Alert -->
+                    <div id="error-card" class="error-card hidden">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span id="error-message"></span>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="loading-state" class="state-card loading-state hidden">
+                        <div class="spinner"></div>
+                        <h3>Analyzing Reel Context</h3>
+                        <div class="loading-steps">
+                            <div class="step active" id="step-1">
+                                <i class="fa-solid fa-circle-notch fa-spin step-spinner"></i>
+                                <i class="fa-solid fa-circle-check step-check"></i>
+                                <span>Understanding Reel context...</span>
+                            </div>
+                            <div class="step" id="step-2">
+                                <i class="fa-solid fa-circle-notch fa-spin step-spinner"></i>
+                                <i class="fa-solid fa-circle-check step-check"></i>
+                                <span>Inferring broader interest...</span>
+                            </div>
+                            <div class="step" id="step-3">
+                                <i class="fa-solid fa-circle-notch fa-spin step-spinner"></i>
+                                <i class="fa-solid fa-circle-check step-check"></i>
+                                <span>Evaluating technology content...</span>
+                            </div>
+                            <div class="step" id="step-4">
+                                <i class="fa-solid fa-circle-notch fa-spin step-spinner"></i>
+                                <i class="fa-solid fa-circle-check step-check"></i>
+                                <span>Filtering low-quality recommendations...</span>
+                            </div>
+                            <div class="step" id="step-5">
+                                <i class="fa-solid fa-circle-notch fa-spin step-spinner"></i>
+                                <i class="fa-solid fa-circle-check step-check"></i>
+                                <span>Generating explanation...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Content (Hidden by default) -->
+                    <div id="results-content" class="results-content hidden">
+                        
+                        <!-- Top Recommendation Card -->
+                        <div class="card recommendation-card">
+                            <div class="rec-badge-container">
+                                <span class="badge badge-primary"><i class="fa-solid fa-star"></i> Recommended Tech Reel</span>
+                                <span id="rec-difficulty" class="badge badge-difficulty">Intermediate</span>
+                            </div>
+                            <h3 id="rec-title">How Software Engineers Prepare for Coding Interviews</h3>
+                            
+                            <div class="rec-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label">Category:</span>
+                                    <span id="rec-category" class="meta-value">DSA / Career</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Interest Confidence:</span>
+                                    <span id="rec-confidence" class="meta-value">High</span>
+                                </div>
+                            </div>
+                            
+                            <div class="explanation-box">
+                                <h4>Why This Recommendation:</h4>
+                                <p id="rec-why-explanation">Connecting the user's broader software engineering interest with a practical career skill.</p>
+                            </div>
+                        </div>
+
+                        <!-- Interest Path Card -->
+                        <div class="card interest-path-card">
+                            <h3><i class="fa-solid fa-route"></i> How We Understood Your Interest</h3>
+                            <div id="interest-path-container" class="interest-path-container">
+                                <!-- Pills with arrows populated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Analysis Details Grid -->
+                        <div class="analysis-details-grid">
+                            
+                            <!-- Interest Detection Card -->
+                            <div class="card small-card">
+                                <h3><i class="fa-solid fa-brain"></i> Interest Detected</h3>
+                                <div class="interest-value-container">
+                                    <div id="detected-interest-topic" class="interest-topic">Software Engineering</div>
+                                    <span id="detected-interest-confidence" class="badge badge-outline">High</span>
+                                </div>
+                                <div class="evidence-list-container">
+                                    <h4>Evidence Detected:</h4>
+                                    <ul id="detected-interest-why" class="evidence-list">
+                                        <li>Strong programming context</li>
+                                        <li>Developer-oriented content</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Current Reel Review Card -->
+                            <div class="card small-card">
+                                <h3><i class="fa-solid fa-film"></i> Current Reel (Input)</h3>
+                                <div class="reel-input-review">
+                                    <div class="review-group">
+                                        <strong>Description:</strong>
+                                        <p id="review-description"></p>
+                                    </div>
+                                    <div class="review-group">
+                                        <strong>Caption:</strong>
+                                        <p id="review-caption"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Why Not Alternatives Card -->
+                        <div class="card alternatives-card">
+                            <h3><i class="fa-solid fa-circle-xmark"></i> Why Not These?</h3>
+                            <p class="section-desc">Alternative candidates that were rejected or passed over during analysis:</p>
+                            <div id="alternatives-container" class="alternatives-list">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Reasoning Breakdown -->
+                        <div class="card collapsible-card">
+                            <button id="toggle-reasoning-btn" class="reasoning-toggle">
+                                <span><i class="fa-solid fa-chart-bar"></i> View Recommendation Reasoning</span>
+                                <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                            </button>
+                            
+                            <div id="reasoning-content" class="reasoning-content hidden">
+                                <div class="score-breakdown-table-wrapper">
+                                    <table class="score-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Evaluation Component</th>
+                                                <th>Weight / Max</th>
+                                                <th>Points Awarded</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="score-table-body">
+                                            <!-- Populated dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </section>
+            </div>
+            
+            <!-- Pitch Section: Why TechScroll AI -->
+            <section class="card pitch-section">
+                <h2>Why TechScroll AI?</h2>
+                <div class="pitch-grid">
+                    <div class="pitch-item">
+                        <i class="fa-solid fa-expand-arrows-alt pitch-icon"></i>
+                        <h3>Context-Aware</h3>
+                        <p>Infers the broader underlying technology domain instead of performing raw, shallow keyword matches.</p>
+                    </div>
+                    <div class="pitch-item">
+                        <i class="fa-solid fa-filter-shield pitch-icon"></i>
+                        <h3>Quality-Aware</h3>
+                        <p>Penalizes and filters out high-hype, low-value clickbait videos ("Master coding in 7 days").</p>
+                    </div>
+                    <div class="pitch-item">
+                        <i class="fa-solid fa-route pitch-icon"></i>
+                        <h3>Explainable</h3>
+                        <p>Provides a clear explanation connecting your inferred scrolling habits to the educational recommendations.</p>
+                    </div>
+                    <div class="pitch-item">
+                        <i class="fa-solid fa-shuffle pitch-icon"></i>
+                        <h3>Adaptive</h3>
+                        <p>The system is dynamic. The recommendation adapts immediately to different user descriptions and captions.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <p>TechScroll AI — An AI-powered hackathon prototype.</p>
+            <p class="copyright">&copy; 2026 TechScroll AI. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Frontend Script -->
+    <script src="/app.js"></script>
+</body>
+</html>
